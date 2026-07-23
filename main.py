@@ -23,3 +23,8 @@ def criar_artista(artista: ArtistaCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(artista_db)
     return artista_db
+
+@app.get('/artistas/', response_model=List[ArtistaCreate])
+def listar_artistas(db: Session = Depends(get_db)):
+    artistas = db.query(Artista).all()
+    return artistas
