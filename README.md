@@ -31,7 +31,7 @@ Uma API REST moderna e bem estruturada para gerenciamento de uma biblioteca de m
 
 ### 1. Clonar o repositório
 ```bash
-git clone <seu-repositorio>
+git clone https://github.com/FilipeMadeira13/biblioteca-de-musica.git
 cd biblioteca_de_musica
 ```
 
