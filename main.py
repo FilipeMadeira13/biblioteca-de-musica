@@ -32,7 +32,7 @@ def listar_artistas(db: Session = Depends(get_db)):
     return artistas
 
 @app.get('/artistas/{artista_id}', response_model=ArtistaResponse)
-def listar_artista(artista_id: int, db: Session = Depends(get_db)):
+def procurar_artista(artista_id: int, db: Session = Depends(get_db)):
     artista = db.query(Artista).filter(Artista.id == artista_id).first()
 
     if not artista:
@@ -80,3 +80,26 @@ def criar_genero(genero: GeneroCreate, db: Session = Depends(get_db)):
 def listar_generos(db: Session = Depends(get_db)):
     generos = db.query(Genero).all()
     return generos
+
+@app.get('/generos/{genero_id}', response_model=GeneroResponse)
+def procurar_genero(genero_id: int, db: Session = Depends(get_db)):
+    genero = db.query(Genero).filter(Genero.id == genero_id).first()
+
+    if not genero:
+        raise HTTPException(status_code=404, detail='Gênero não encontrado.')
+
+    return genero
+
+@app.put('/generos/{genero_id}', response_model=GeneroResponse)
+def atualizar_genero(genero_id: int, genero_atualizado: GeneroCreate, db: Session = Depends(get_db)):
+    genero = db.query(Genero).filter(Genero.id == genero_id).first()
+
+    if not genero:
+        raise HTTPException(status_code=404, detail='Gênero não encontrado.')
+
+    genero.nome = genero_atualizado.nome
+
+    db.commit()
+    db.refresh(genero)
+
+    return genero

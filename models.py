@@ -36,10 +36,10 @@ class Genero(Base):
     """
     __tablename__ = 'generos'
 
-    id = Column(Integer, primary_key=True, index=True)
-    nome = Column(String(100))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    nome: Mapped[str] = mapped_column(String(100))
 
-    albuns = relationship('Album', secondary=album_genero, back_populates='generos')
+    albuns: Mapped[list['Album']] = relationship('Album', secondary=album_genero, back_populates='generos')
 
 class Album(Base):
     """
@@ -52,10 +52,10 @@ class Album(Base):
     """
     __tablename__ = 'albuns'
 
-    id = Column(Integer, primary_key=True, index=True)
-    titulo = Column(String(100))
-    artista_id = Column(Integer, ForeignKey('artistas.id'))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    titulo: Mapped[str] = mapped_column(String(100))
+    artista_id: Mapped[int] = mapped_column(Integer, ForeignKey('artistas.id'))
 
-    artista = relationship('Artista', back_populates='albuns')
-    generos = relationship('Genero', secondary=album_genero, back_populates='albuns')
+    artista: Mapped['Artista'] = relationship('Artista', back_populates='albuns')
+    generos: Mapped[list['Genero']] = relationship('Genero', secondary=album_genero, back_populates='albuns')
 
