@@ -103,3 +103,36 @@ def atualizar_genero(genero_id: int, genero_atualizado: GeneroCreate, db: Sessio
     db.refresh(genero)
 
     return genero
+
+@app.delete('/generos/{genero_id}', status_code=204)
+def excluir_genero(genero_id: int, db: Session = Depends(get_db)):
+    genero = db.query(Genero).filter(Genero.id == genero_id).first()
+    
+    if not genero:
+        raise HTTPException(status_code=404, detail='Gênero não encontrado.')
+
+    db.delete(genero)
+    db.commit()
+
+# ENDPOINTS - ALBUM
+
+@app.post('/albuns/', response_model=AlbumResponse)
+def criar_album(album: AlbumCreate, db: Session = Depends(get_db)):
+    artista = db.query(Artista).filter(Artista.id == album.artista_id).first()
+    if not artista:
+        raise HTTPException(status_code=404, detail='Artista não encontrado.')
+
+    generos = db.query(Genero).filter(Genero.id.in_(album.genero_ids)).all()
+
+    if len(generos) != len(album.genero_ids):
+        raise HTTPException(status_code=404, detail='Um ou mais gêneros não foram encontrados.')
+
+    album_db = Album(
+        titulo=album.titulo,
+        artista_id=album.artista_id,
+        generos=generos
+    )
+    db.add(album_db)
+    db.commit()
+    db.refresh(album_db)
+    return album_db
