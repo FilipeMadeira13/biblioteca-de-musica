@@ -141,3 +141,38 @@ def criar_album(album: AlbumCreate, db: Session = Depends(get_db)):
 def listar_albuns(db: Session = Depends(get_db)):
     albuns = db.query(Album).options(joinedload(Album.artista), joinedload(Album.generos)).all()
     return albuns
+
+@app.get('/albuns/{album_id}', response_model=AlbumResponse)
+def procurar_album(album_id: int, db: Session = Depends(get_db)):
+    album = db.query(Album).options(joinedload(Album.artista), joinedload(Album.generos)).filter(Album.id == album_id).first()
+
+    if not album:
+        raise HTTPException(status_code=404, detail='Álbum não encontrado.')
+
+    return album
+
+@app.put('/albuns/{album_id}', response_model=AlbumResponse)
+def atualizar_album(album_id: int, album_atualizado: AlbumCreate, db: Session = Depends(get_db)):
+    album = db.query(Album).filter(Album.id == album_id).first()
+    
+    if not album:
+        raise HTTPException(status_code=404, detail='Álbum não encontrado.')
+
+    artista = db.query(Artista).filter(Artista.id == album_atualizado.artista_id).first()
+
+    if not artista:
+        raise HTTPException(status_code=404, detail='Artista não encontrado.')
+
+    generos = db.query(Genero).filter(Genero.id.in_(album_atualizado.genero_ids)).all()
+    
+    if len(generos) != len(album_atualizado.genero_ids):
+        raise HTTPException(status_code=404, detail='Um ou mais gêneros não foram encontrados.')
+    
+    album.titulo = album_atualizado.titulo
+    album.artista_id = album_atualizado.artista_id
+    album.genero_ids = generos
+    
+    db.commit()
+    db.refresh(album)
+
+    return album
