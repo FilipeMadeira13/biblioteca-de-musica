@@ -16,6 +16,8 @@ def get_db():
     finally:
         db.close()
 
+# ENDPOINTS - ARTISTA
+
 @app.post('/artistas/', response_model=ArtistaResponse)
 def criar_artista(artista: ArtistaCreate, db: Session = Depends(get_db)):
     artista_db = Artista(**artista.model_dump())
@@ -53,3 +55,28 @@ def atualizar_artista(artista_id: int, artista_atualizado: ArtistaCreate, db: Se
     db.refresh(artista)
 
     return artista
+
+@app.delete('/artistas/{artista_id}', status_code=204)
+def excluir_artista(artista_id: int, db: Session = Depends(get_db)):
+    artista = db.query(Artista).filter(Artista.id == artista_id).first()
+
+    if not artista:
+        raise HTTPException(status_code=404, detail='Artista não encontrado.')
+
+    db.delete(artista)
+    db.commit()
+
+# ENDPOINTS - GENERO
+
+@app.post('/generos/', response_model=GeneroResponse)
+def criar_genero(genero: GeneroCreate, db: Session = Depends(get_db)):
+    genero_db = Genero(**genero.model_dump())
+    db.add(genero_db)
+    db.commit()
+    db.refresh(genero_db)
+    return genero_db
+
+@app.get('/generos/', response_model=List[GeneroResponse])
+def listar_generos(db: Session = Depends(get_db)):
+    generos = db.query(Genero).all()
+    return generos
