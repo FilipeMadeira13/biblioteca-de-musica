@@ -24,7 +24,16 @@ def criar_artista(artista: ArtistaCreate, db: Session = Depends(get_db)):
     db.refresh(artista_db)
     return artista_db
 
-@app.get('/artistas/', response_model=List[ArtistaCreate])
+@app.get('/artistas/', response_model=List[ArtistaResponse])
 def listar_artistas(db: Session = Depends(get_db)):
     artistas = db.query(Artista).all()
     return artistas
+
+@app.get('/artistas/{artista_id}', response_model=ArtistaResponse)
+def listar_artista(artista_id: int, db: Session = Depends(get_db)):
+    artista = db.query(Artista).filter(Artista.id == artista_id).first()
+
+    if not artista:
+        raise HTTPException(status_code=404, detail='Artista não encontrado.')
+
+    return artista
