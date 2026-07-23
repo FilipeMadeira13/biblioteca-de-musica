@@ -238,7 +238,7 @@ Este projeto está sob a licença MIT.
 
 ## 👨‍💻 Autor
 
-Desenvolvido como exemplo de API REST profissional com FastAPI e SQLAlchemy.
+Desenvolvido por Filipe Madeira como exemplo de API REST profissional com FastAPI e SQLAlchemy.
 
 ---
 
