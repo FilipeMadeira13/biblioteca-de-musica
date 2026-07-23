@@ -176,3 +176,13 @@ def atualizar_album(album_id: int, album_atualizado: AlbumCreate, db: Session = 
     db.refresh(album)
 
     return album
+
+@app.delete('/albuns/{album_id}', status_code=204)
+def excluir_album(album_id: int, db: Session = Depends(get_db)):
+    album = db.query(Album).filter(Album.id == album_id).first()
+    
+    if not album:
+        raise HTTPException(status_code=404, detail='Álbum não encontrado.')
+
+    db.delete(album)
+    db.commit()
