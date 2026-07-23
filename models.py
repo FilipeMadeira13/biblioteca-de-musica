@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Table
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from database import Base
 
 album_genero = Table(
@@ -18,12 +18,12 @@ class Artista(Base):
     """
     __tablename__ = 'artistas'
 
-    id = Column(Integer, primary_key=True, index=True)
-    nome = Column(String(100))
-    pais_origem = Column(String(100))
-    ano_formacao = Column(Integer)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    nome: Mapped[str] = mapped_column(String(100))
+    pais_origem: Mapped[str] = mapped_column(String(100))
+    ano_formacao: Mapped[int] = mapped_column(Integer)
 
-    albuns = relationship('Album', back_populates='artista')
+    albuns: Mapped[list['Album']] = relationship('Album', back_populates='artista')
 
 
 class Genero(Base):

@@ -37,3 +37,19 @@ def listar_artista(artista_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail='Artista não encontrado.')
 
     return artista
+
+@app.put('/artistas/{artista_id}', response_model=ArtistaResponse)
+def atualizar_artista(artista_id: int, artista_atualizado: ArtistaCreate, db: Session = Depends(get_db)):
+    artista = db.query(Artista).filter(Artista.id == artista_id).first()
+
+    if not artista:
+        raise HTTPException(status_code=404, detail='Artista não encontrado.')
+
+    artista.nome = artista_atualizado.nome
+    artista.pais_origem = artista_atualizado.pais_origem
+    artista.ano_formacao = artista_atualizado.ano_formacao
+
+    db.commit()
+    db.refresh(artista)
+
+    return artista
