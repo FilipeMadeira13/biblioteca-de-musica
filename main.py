@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from database import SessionLocal, engine
 from models import Artista, Album, Genero, Base
 from schemas import ArtistaResponse, ArtistaCreate, GeneroResponse, GeneroCreate, AlbumCreate, AlbumResponse
@@ -136,3 +136,8 @@ def criar_album(album: AlbumCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(album_db)
     return album_db
+
+@app.get('/albuns/', response_model=List[AlbumResponse])
+def listar_albuns(db: Session = Depends(get_db)):
+    albuns = db.query(Album).options(joinedload(Album.artista), joinedload(Album.generos)).all()
+    return albuns
