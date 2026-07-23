@@ -170,7 +170,7 @@ def atualizar_album(album_id: int, album_atualizado: AlbumCreate, db: Session = 
     
     album.titulo = album_atualizado.titulo
     album.artista_id = album_atualizado.artista_id
-    album.genero_ids = generos
+    album.generos = generos
     
     db.commit()
     db.refresh(album)
