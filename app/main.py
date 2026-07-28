@@ -1,8 +1,10 @@
 from typing import List
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
+from app.schemas.album import AlbumCreate, AlbumResponse
+from app.schemas.artista import ArtistaCreate, ArtistaResponse
+from app.schemas.genero import GeneroCreate, GeneroResponse
 from database import SessionLocal, engine
-from schemas import ArtistaResponse, ArtistaCreate, GeneroResponse, GeneroCreate, AlbumCreate, AlbumResponse
 from app.models.artista import Artista
 from app.models.album import Album
 from app.models.genero import Genero
