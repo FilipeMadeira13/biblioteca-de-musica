@@ -4,12 +4,10 @@ from sqlalchemy.orm import Session, joinedload
 from app.schemas.album import AlbumCreate, AlbumResponse
 from app.schemas.artista import ArtistaCreate, ArtistaResponse
 from app.schemas.genero import GeneroCreate, GeneroResponse
-from database import SessionLocal, engine
+from app.database import SessionLocal, engine, Base
 from app.models.artista import Artista
 from app.models.album import Album
 from app.models.genero import Genero
-from database import Base
-
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()

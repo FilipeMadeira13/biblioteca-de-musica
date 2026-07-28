@@ -1,9 +1,10 @@
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.database import Base
 from app.models.album_genero import album_genero
 from app.models.album import Album
-from database import Base
+
 
 
 class Genero(Base):

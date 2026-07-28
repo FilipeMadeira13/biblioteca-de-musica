@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, Table
 
-from database import Base
+from app.database import Base
 
 
 album_genero = Table(

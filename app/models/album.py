@@ -2,7 +2,7 @@ from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.album_genero import album_genero
-from database import Base
+from app.database import Base
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
