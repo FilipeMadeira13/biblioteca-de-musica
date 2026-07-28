@@ -33,7 +33,7 @@ Consulte `requirements.txt` para a lista completa de dependências e versões.
 
 ### 1. Clonar o repositório
 ```bash
-git clone <seu-repositorio>
+git clone https://github.com/FilipeMadeira13/biblioteca-de-musica.git
 cd biblioteca_de_musica
 ```
 
@@ -258,7 +258,7 @@ Este projeto está sob a licença MIT.
 
 ## 👨‍💻 Autor
 
-Desenvolvido como exemplo de API REST profissional com FastAPI e SQLAlchemy.
+Desenvolvido por Filipe Madeira como exemplo de API REST profissional com FastAPI e SQLAlchemy.
 
 ---
 
