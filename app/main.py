@@ -2,8 +2,11 @@ from typing import List
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 from database import SessionLocal, engine
-from models import Artista, Album, Genero, Base
 from schemas import ArtistaResponse, ArtistaCreate, GeneroResponse, GeneroCreate, AlbumCreate, AlbumResponse
+from app.models.artista import Artista
+from app.models.album import Album
+from app.models.genero import Genero
+from database import Base
 
 Base.metadata.create_all(bind=engine)
 
