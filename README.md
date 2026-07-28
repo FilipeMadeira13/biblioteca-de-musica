@@ -1,6 +1,6 @@
 # 🎵 Biblioteca de Música - API REST
 
-Uma API REST moderna e bem estruturada para gerenciamento de uma biblioteca de música, desenvolvida com FastAPI e SQLAlchemy. Demonstra boas práticas em design de APIs, validação de dados e modelagem de banco de dados.
+Uma API REST moderna para gerenciar uma biblioteca de música, construída com FastAPI e SQLAlchemy. O projeto usa organização por módulos (`app/`) com models, schemas, rotas e configuração de banco separadas.
 
 ## ✨ Características Principais
 
@@ -13,13 +13,15 @@ Uma API REST moderna e bem estruturada para gerenciamento de uma biblioteca de m
 
 ## 🛠️ Stack Tecnológico
 
-| Tecnologia | Versão | Propósito |
-|-----------|--------|----------|
-| **FastAPI** | 0.139.2 | Framework web de alta performance |
-| **SQLAlchemy** | 2.0.51 | ORM para manipulação de banco de dados |
-| **PostgreSQL** | - | Banco de dados relacional |
-| **Pydantic** | 2.13.4 | Validação de dados e serialização |
-| **Uvicorn** | 0.51.0 | Servidor ASGI |
+Dependências principais (veja `requirements.txt`):
+
+- **FastAPI** 0.139.2 — Framework web
+- **SQLAlchemy** 2.0.51 — ORM
+- **Pydantic** 2.13.4 — Validação e serialização
+- **Uvicorn** 0.51.0 — Servidor ASGI
+- **psycopg2-binary** — Adaptador PostgreSQL
+
+Consulte `requirements.txt` para a lista completa de dependências e versões.
 
 ## 📋 Pré-requisitos
 
@@ -59,7 +61,8 @@ DATABASE_URL=postgresql://usuario:senha@localhost:5432/biblioteca_musica
 
 ### 5. Executar a aplicação
 ```bash
-uvicorn main:app --reload
+# estando na raiz do projeto
+uvicorn app.main:app --reload
 ```
 
 A API estará disponível em `http://localhost:8000`
@@ -72,14 +75,27 @@ Acesse a documentação interativa em:
 
 ## 🏗️ Arquitetura e Estrutura
 
+O código está organizado dentro do diretório `app/`:
+
 ```
 biblioteca_de_musica/
-├── main.py          # Aplicação principal e definição de rotas
-├── models.py        # Modelos SQLAlchemy (Artista, Genero, Album)
-├── schemas.py       # Esquemas Pydantic para validação
-├── database.py      # Configuração e sessão do banco de dados
-├── requirements.txt # Dependências do projeto
-└── README.md        # Este arquivo
+├── app/
+│   ├── main.py                # Aplicação FastAPI e ponto de entrada
+│   ├── database.py            # Configuração do SQLAlchemy / sessão
+│   ├── models/                # Modelos SQLAlchemy
+│   │   ├── album.py
+│   │   ├── artista.py
+│   │   └── album_genero.py
+│   ├── routes/                # Roteadores (endpoints) por recurso
+│   │   ├── album.py
+│   │   ├── artista.py
+│   │   └── genero.py
+│   └── schemas/               # Esquemas Pydantic por recurso
+│       ├── album.py
+│       ├── artista.py
+│       └── genero.py
+├── requirements.txt
+└── README.md
 ```
 
 ### Modelos de Dados
@@ -207,10 +223,14 @@ Se `artista_id` ou algum id em `genero_ids` não existir no banco, a API retorna
 
 ## 🧪 Testando a API
 
-Use a Swagger UI integrada (`http://localhost:8000/docs`) para testar todos os endpoints interativamente, ou use ferramentas como:
-- [Postman](https://www.postman.com/)
-- [Insomnia](https://insomnia.rest/)
-- `curl` via terminal
+Use a Swagger UI integrada (`http://localhost:8000/docs`) para testar os endpoints interativamente, ou ferramentas como Postman / Insomnia / `curl`.
+
+Exemplo rápido (criar artista):
+```bash
+curl -X POST "http://localhost:8000/artistas/" \
+  -H "Content-Type: application/json" \
+  -d '{"nome":"The Beatles","pais_origem":"Reino Unido","ano_formacao":1960}'
+```
 
 ## 🩹 Solução de Problemas
 
