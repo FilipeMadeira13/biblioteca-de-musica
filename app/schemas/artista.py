@@ -6,8 +6,10 @@ class ArtistaResponse(BaseModel):
     nome: str
     pais_origem: str
     ano_formacao: int
+
     class Config:
         from_attributes = True
+
 
 class ArtistaCreate(BaseModel):
     nome: str

@@ -9,8 +9,10 @@ class AlbumResponse(BaseModel):
     titulo: str
     artista: ArtistaResponse
     generos: list[GeneroResponse] = []
+
     class Config:
         from_attributes = True
+
 
 class AlbumCreate(BaseModel):
     titulo: str

@@ -1,9 +1,11 @@
 from fastapi import FastAPI
-from app.database import SessionLocal, engine, Base
+
+from app.database import Base, SessionLocal, engine
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
 
 def get_db():
     db = SessionLocal()
@@ -11,5 +13,6 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 from app.routes import album, artista, genero
