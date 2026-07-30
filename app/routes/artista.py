@@ -3,7 +3,8 @@ from typing import List
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.main import app, get_db
+from app.database import get_db
+from app.main import app
 from app.models.artista import Artista
 from app.schemas.artista import ArtistaCreate, ArtistaResponse
 
