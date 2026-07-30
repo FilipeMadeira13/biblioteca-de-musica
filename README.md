@@ -6,10 +6,12 @@ Uma API REST moderna para gerenciar uma biblioteca de música, construída com F
 
 - **CRUD Completo**: Operações Create, Read, Update e Delete para Artistas, Gêneros e Álbuns
 - **Relacionamentos Complexos**: Suporte a relacionamentos One-to-Many e Many-to-Many
-- **Validação de Dados**: Validação automática com Pydantic em todas as requisições
+- **Validação de Dados**: Validação automática com Pydantic 2.x em todas as requisições
 - **Tratamento de Erros**: Respostas HTTP apropriadas com mensagens de erro descritivas
 - **Documentação Interativa**: Swagger UI integrado para testar endpoints
-- **Type Hints**: Código totalmente tipado para melhor qualidade e manutenibilidade
+- **Type Hints Avançados**: Código totalmente tipado com `Mapped` e type hints completos (SQLAlchemy 2.0)
+- **SQLAlchemy 2.0 Moderno**: Uso de `mapped_column` e `Mapped` para melhor type safety
+- **Gestão de Banco Robusta**: Validação de variáveis de ambiente com tratamento de erros
 
 ## 🛠️ Stack Tecnológico
 
@@ -100,25 +102,64 @@ biblioteca_de_musica/
 
 ### Modelos de Dados
 
+Todos os modelos utilizam SQLAlchemy 2.0 com `Mapped` type hints para máxima type safety:
+
 #### Artista
-- `id` (int): Identificador único
-- `nome` (str): Nome do artista
-- `pais_origem` (str): País de origem
-- `ano_formacao` (int): Ano de formação
+```python
+class Artista(Base):
+    id: Mapped[int]           # Identificador único
+    nome: Mapped[str]         # Nome do artista
+    pais_origem: Mapped[str]  # País de origem
+    ano_formacao: Mapped[int] # Ano de formação
+    albuns: Mapped[list["Album"]]  # Relacionamento um-para-muitos
+```
 
 #### Gênero
-- `id` (int): Identificador único
-- `nome` (str): Nome do gênero musical
+```python
+class Genero(Base):
+    id: Mapped[int]           # Identificador único
+    nome: Mapped[str]         # Nome do gênero musical
+    albuns: Mapped[list["Album"]]  # Relacionamento muitos-para-muitos
+```
 
 #### Álbum
-- `id` (int): Identificador único
-- `titulo` (str): Título do álbum
-- `artista_id` (int): Referência ao artista (usado na criação/atualização)
-- `artista` (str): Nome do artista (retornado nas respostas)
-- `genero_ids` (list[int]): Ids dos gêneros associados (usado na criação/atualização)
-- `generos` (list): Lista de gêneros associados, com `id` e `nome` (retornado nas respostas)
+```python
+class Album(Base):
+    id: Mapped[int]            # Identificador único
+    titulo: Mapped[str]        # Título do álbum
+    artista_id: Mapped[int]    # Chave estrangeira para artista
+    artista: Mapped["Artista"] # Relacionamento muitos-para-um
+    generos: Mapped[list["Genero"]]  # Relacionamento muitos-para-muitos
+```
 
 > A relação entre Álbum e Gênero é muitos-para-muitos, implementada através de uma tabela associativa (`album_genero`) que guarda os pares `album_id` / `genero_id`.
+
+### Configuração do Banco de Dados
+
+A configuração do SQLAlchemy está em `app/database.py`:
+
+```python
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL não foi definida. Verifique seu arquivo .env")
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine)
+Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+```
+
+**Recursos:**
+- Validação obrigatória de `DATABASE_URL` via `.env`
+- Session management com context manager para garantir limpeza de recursos
+- Suporte para qualquer banco de dados SQLAlchemy (PostgreSQL, MySQL, SQLite, etc.)
 
 ## 🔌 Endpoints Disponíveis
 
@@ -213,13 +254,16 @@ Se `artista_id` ou algum id em `genero_ids` não existir no banco, a API retorna
 ## 🎯 Boas Práticas Implementadas
 
 ✅ **Clean Code**: Código bem estruturado e legível  
-✅ **Type Hints**: Tipagem completa para melhor manutenibilidade  
-✅ **Validação de Entrada**: Pydantic garante dados válidos  
+✅ **Type Hints Avançados**: Uso completo de `Mapped` e type hints do SQLAlchemy 2.0  
+✅ **Validação de Entrada**: Pydantic 2.x garante dados válidos  
 ✅ **Tratamento de Erros**: Respostas HTTP apropriadas e mensagens claras  
 ✅ **Separação de Responsabilidades**: Models, Schemas e Routes bem definidos  
 ✅ **Relacionamentos Complexos**: One-to-Many (Artista → Álbum) e Many-to-Many (Álbum ↔ Gênero) com integridade referencial via `ForeignKey`  
 ✅ **Documentação Automática**: Swagger UI gerada automaticamente  
 ✅ **Dependency Injection**: Uso de `Depends` do FastAPI para gerenciar sessões  
+✅ **Validação de Ambiente**: Verificação de `DATABASE_URL` com tratamento de erros  
+✅ **Docstrings**: Documentação de classes e relacionamentos nos models  
+✅ **TYPE_CHECKING**: Uso de imports condicionais para evitar circular imports  
 
 ## 🧪 Testando a API
 
