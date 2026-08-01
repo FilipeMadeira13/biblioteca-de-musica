@@ -1,20 +1,20 @@
 from pydantic import BaseModel
 
-from app.schemas.artista import ArtistaResponse
-from app.schemas.genero import GeneroResponse
+from app.schemas.artist import ArtistResponse
+from app.schemas.genre import GenreResponse
 
 
 class AlbumResponse(BaseModel):
     id: int
-    titulo: str
-    artista: ArtistaResponse
-    generos: list[GeneroResponse] = []
+    title: str
+    artist: ArtistResponse
+    genres: list[GenreResponse] = []
 
     class Config:
         from_attributes = True
 
 
 class AlbumCreate(BaseModel):
-    titulo: str
-    artista_id: int
-    genero_ids: list[int] = []
+    title: str
+    artist_id: int
+    genre_ids: list[int] = []

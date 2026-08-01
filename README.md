@@ -1,45 +1,35 @@
-# 🎵 Biblioteca de Música - API REST
+# 🎵 Music Library REST API
 
-Uma API REST moderna para gerenciar uma biblioteca de música, construída com FastAPI e SQLAlchemy. O projeto usa organização por módulos (`app/`) com models, schemas, rotas e configuração de banco separadas.
+A modern REST API for managing a music library, built with FastAPI and SQLAlchemy. The project is organized into `app/` modules with separate models, schemas, routes, and database configuration.
 
-## ✨ Características Principais
+## ✨ Key Features
 
-- **CRUD Completo**: Operações Create, Read, Update e Delete para Artistas, Gêneros e Álbuns
-- **Relacionamentos Complexos**: Suporte a relacionamentos One-to-Many e Many-to-Many
-- **Validação de Dados**: Validação automática com Pydantic 2.x em todas as requisições
-- **Tratamento de Erros**: Respostas HTTP apropriadas com mensagens de erro descritivas
-- **Documentação Interativa**: Swagger UI integrado para testar endpoints
-- **Type Hints Avançados**: Código totalmente tipado com `Mapped` e type hints completos (SQLAlchemy 2.0)
-- **SQLAlchemy 2.0 Moderno**: Uso de `mapped_column` e `Mapped` para melhor type safety
-- **Gestão de Banco Robusta**: Validação de variáveis de ambiente com tratamento de erros
+- **Full CRUD**: Create, Read, Update, and Delete operations for Artists, Genres, and Albums
+- **Complex Relationships**: One-to-Many and Many-to-Many support
+- **Data Validation**: Automatic request validation with Pydantic 2.x
+- **Error Handling**: Clear HTTP responses with descriptive error messages
+- **Interactive Docs**: Built-in Swagger UI for easy testing
+- **Advanced Type Hints**: Fully typed code using SQLAlchemy 2.0 `Mapped`
+- **Modern SQLAlchemy**: Uses `mapped_column` and `Mapped` for better type safety
+- **Database Validation**: Environment variable checks with explicit error handling
 
-## 🛠️ Stack Tecnológico
+See `requirements.txt` for the full dependency list.
 
-Dependências principais (veja `requirements.txt`):
-
-- **FastAPI** 0.139.2 — Framework web
-- **SQLAlchemy** 2.0.51 — ORM
-- **Pydantic** 2.13.4 — Validação e serialização
-- **Uvicorn** 0.51.0 — Servidor ASGI
-- **psycopg2-binary** — Adaptador PostgreSQL
-
-Consulte `requirements.txt` para a lista completa de dependências e versões.
-
-## 📋 Pré-requisitos
+## 📋 Prerequisites
 
 - Python 3.9+
 - PostgreSQL 12+
-- pip ou poetry
+- pip or poetry
 
-## 🚀 Instalação
+## 🚀 Installation
 
-### 1. Clonar o repositório
+### 1. Clone the repository
 ```bash
 git clone https://github.com/FilipeMadeira13/biblioteca-de-musica.git
 cd biblioteca_de_musica
 ```
 
-### 2. Criar e ativar ambiente virtual
+### 2. Create and activate a virtual environment
 ```bash
 # Windows
 python -m venv venv
@@ -50,260 +40,214 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Instalar dependências
+### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configurar variáveis de ambiente
-Crie um arquivo `.env` na raiz do projeto:
+### 4. Configure environment variables
+Create a `.env` file in the project root:
 ```env
-DATABASE_URL=postgresql://usuario:senha@localhost:5432/biblioteca_musica
+DATABASE_URL=postgresql://user:password@localhost:5432/music_library
 ```
 
-### 5. Executar a aplicação
+### 5. Run the application
 ```bash
-# estando na raiz do projeto
 uvicorn app.main:app --reload
 ```
 
-A API estará disponível em `http://localhost:8000`
+The API will be available at `http://localhost:8000`
 
-## 📚 Documentação da API
+## 📚 API Documentation
 
-Acesse a documentação interativa em:
+Interactive documentation is available at:
 - **Swagger UI**: `http://localhost:8000/docs`
 - **ReDoc**: `http://localhost:8000/redoc`
 
-## 🏗️ Arquitetura e Estrutura
+## 🏗️ Architecture and Structure
 
-O código está organizado dentro do diretório `app/`:
+The code is organized under the `app/` directory:
 
 ```
-biblioteca_de_musica/
-├── app/
-│   ├── main.py                # Aplicação FastAPI e ponto de entrada
-│   ├── database.py            # Configuração do SQLAlchemy / sessão
-│   ├── models/                # Modelos SQLAlchemy
-│   │   ├── album.py
-│   │   ├── artista.py
-│   │   └── album_genero.py
-│   ├── routes/                # Roteadores (endpoints) por recurso
-│   │   ├── album.py
-│   │   ├── artista.py
-│   │   └── genero.py
-│   └── schemas/               # Esquemas Pydantic por recurso
-│       ├── album.py
-│       ├── artista.py
-│       └── genero.py
-├── requirements.txt
-└── README.md
+app/
+├── main.py            # FastAPI application entry point
+├── database.py        # SQLAlchemy engine and session configuration
+├── models/            # SQLAlchemy models
+│   ├── album.py
+│   ├── artist.py
+│   ├── genre.py
+│   ├── album_genre.py
+│   └── user.py
+├── routes/            # FastAPI routers by resource
+│   ├── album.py
+│   ├── artist.py
+│   └── genre.py
+└── schemas/           # Pydantic schemas by resource
+    ├── album.py
+    ├── artist.py
+    ├── genre.py
+    └── user.py
 ```
 
-### Modelos de Dados
+### Data Models
 
-Todos os modelos utilizam SQLAlchemy 2.0 com `Mapped` type hints para máxima type safety:
+All models use SQLAlchemy 2.0 with `Mapped` type hints for maximum type safety.
 
-#### Artista
+#### Artist
 ```python
-class Artista(Base):
-    id: Mapped[int]           # Identificador único
-    nome: Mapped[str]         # Nome do artista
-    pais_origem: Mapped[str]  # País de origem
-    ano_formacao: Mapped[int] # Ano de formação
-    albuns: Mapped[list["Album"]]  # Relacionamento um-para-muitos
+class Artist(Base):
+    id: Mapped[int]           # Unique identifier
+    name: Mapped[str]         # Artist name
+    country_of_origin: Mapped[str]  # Country of origin
+    year_formed: Mapped[int]   # Year formed
+    albums: Mapped[list["Album"]]  # One-to-many relationship
 ```
 
-#### Gênero
+#### Genre
 ```python
-class Genero(Base):
-    id: Mapped[int]           # Identificador único
-    nome: Mapped[str]         # Nome do gênero musical
-    albuns: Mapped[list["Album"]]  # Relacionamento muitos-para-muitos
+class Genre(Base):
+    id: Mapped[int]           # Unique identifier
+    name: Mapped[str]         # Genre name
+    albums: Mapped[list["Album"]]  # Many-to-many relationship
 ```
 
-#### Álbum
+#### Album
 ```python
 class Album(Base):
-    id: Mapped[int]            # Identificador único
-    titulo: Mapped[str]        # Título do álbum
-    artista_id: Mapped[int]    # Chave estrangeira para artista
-    artista: Mapped["Artista"] # Relacionamento muitos-para-um
-    generos: Mapped[list["Genero"]]  # Relacionamento muitos-para-muitos
+    id: Mapped[int]            # Unique identifier
+    title: Mapped[str]         # Album title
+    artist_id: Mapped[int]     # Foreign key to artist
+    artist: Mapped["Artist"]  # Many-to-one relationship
+    genres: Mapped[list["Genre"]]  # Many-to-many relationship
 ```
 
-> A relação entre Álbum e Gênero é muitos-para-muitos, implementada através de uma tabela associativa (`album_genero`) que guarda os pares `album_id` / `genero_id`.
+> The relationship between Album and Genre is many-to-many, implemented through the `album_genre` association table.
 
-### Configuração do Banco de Dados
+### Database Configuration
 
-A configuração do SQLAlchemy está em `app/database.py`:
+SQLAlchemy configuration is in `app/database.py`:
 
 ```python
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL não foi definida. Verifique seu arquivo .env")
+    raise ValueError("DATABASE_URL is not set. Check your .env file.")
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 ```
 
-**Recursos:**
-- Validação obrigatória de `DATABASE_URL` via `.env`
-- Session management com context manager para garantir limpeza de recursos
-- Suporte para qualquer banco de dados SQLAlchemy (PostgreSQL, MySQL, SQLite, etc.)
+**Features:**
+- Required `DATABASE_URL` validation using `.env`
+- Session management with cleanup via generator
+- Support for any SQLAlchemy-compatible database (PostgreSQL, MySQL, SQLite, etc.)
 
-## 🔌 Endpoints Disponíveis
+## 🔌 Available Endpoints
 
-### Artistas
+### Artists
 ```
-POST   /artistas/              # Criar novo artista
-GET    /artistas/              # Listar todos os artistas
-GET    /artistas/{artista_id}  # Obter artista específico
-PUT    /artistas/{artista_id}  # Atualizar artista
-DELETE /artistas/{artista_id}  # Deletar artista
-```
-
-### Gêneros
-```
-POST   /generos/              # Criar novo gênero
-GET    /generos/              # Listar todos os gêneros
-GET    /generos/{genero_id}   # Obter gênero específico
-PUT    /generos/{genero_id}   # Atualizar gênero
-DELETE /generos/{genero_id}   # Deletar gênero
+POST   /artists/              # Create a new artist
+GET    /artists/              # List all artists
+GET    /artists/{artist_id}   # Get a specific artist
+PUT    /artists/{artist_id}   # Update an artist
+DELETE /artists/{artist_id}   # Delete an artist
 ```
 
-### Álbuns
+### Genres
 ```
-POST   /albuns/               # Criar novo álbum
-GET    /albuns/               # Listar todos os álbuns
-GET    /albuns/{album_id}     # Obter álbum específico
-PUT    /albuns/{album_id}     # Atualizar álbum
-DELETE /albuns/{album_id}     # Deletar álbum
+POST   /genres/               # Create a new genre
+GET    /genres/               # List all genres
+GET    /genres/{genre_id}     # Get a specific genre
+PUT    /genres/{genre_id}     # Update a genre
+DELETE /genres/{genre_id}     # Delete a genre
 ```
 
-## 📝 Exemplos de Uso
+### Albums
+```
+POST   /albums/               # Create a new album
+GET    /albums/               # List all albums
+GET    /albums/{album_id}     # Get a specific album
+PUT    /albums/{album_id}     # Update an album
+DELETE /albums/{album_id}     # Delete an album
+```
 
-### Criar um Artista
+## 📝 Usage Examples
+
+### Create an Artist
 ```bash
-curl -X POST "http://localhost:8000/artistas/" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nome": "The Beatles",
-    "pais_origem": "Reino Unido",
-    "ano_formacao": 1960
+curl -X POST "http://localhost:8000/artists/"   -H "Content-Type: application/json"   -d '{
+    "name": "The Beatles",
+    "country_of_origin": "United Kingdom",
+    "year_formed": 1960
   }'
 ```
 
-### Listar Artistas
+### Create a Genre
 ```bash
-curl -X GET "http://localhost:8000/artistas/"
-```
-
-### Obter Artista Específico
-```bash
-curl -X GET "http://localhost:8000/artistas/1"
-```
-
-### Atualizar Artista
-```bash
-curl -X PUT "http://localhost:8000/artistas/1" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nome": "The Beatles Remastered",
-    "pais_origem": "Reino Unido",
-    "ano_formacao": 1960
+curl -X POST "http://localhost:8000/genres/"   -H "Content-Type: application/json"   -d '{
+    "name": "Rock"
   }'
 ```
 
-### Deletar Artista
+### Create an Album
+A new album must reference an existing artist (`artist_id`) and optionally include a list of genre IDs (`genre_ids`):
 ```bash
-curl -X DELETE "http://localhost:8000/artistas/1"
-```
-
-### Criar um Gênero
-```bash
-curl -X POST "http://localhost:8000/generos/" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "nome": "Rock"
+curl -X POST "http://localhost:8000/albums/"   -H "Content-Type: application/json"   -d '{
+    "title": "Abbey Road",
+    "artist_id": 1,
+    "genre_ids": [1, 2]
   }'
 ```
 
-### Criar um Álbum
-O álbum precisa referenciar um artista existente (`artista_id`) e, opcionalmente, uma lista de gêneros já cadastrados (`genero_ids`):
-```bash
-curl -X POST "http://localhost:8000/albuns/" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "titulo": "Abbey Road",
-    "artista_id": 1,
-    "genero_ids": [1, 2]
-  }'
-```
-Se `artista_id` ou algum id em `genero_ids` não existir no banco, a API retorna `404` com uma mensagem indicando o que não foi encontrado.
+If `artist_id` or any `genre_id` does not exist, the API returns `404` with a clear error message.
 
-## 🎯 Boas Práticas Implementadas
+## 🎯 Good Practices Implemented
 
-✅ **Clean Code**: Código bem estruturado e legível  
-✅ **Type Hints Avançados**: Uso completo de `Mapped` e type hints do SQLAlchemy 2.0  
-✅ **Validação de Entrada**: Pydantic 2.x garante dados válidos  
-✅ **Tratamento de Erros**: Respostas HTTP apropriadas e mensagens claras  
-✅ **Separação de Responsabilidades**: Models, Schemas e Routes bem definidos  
-✅ **Relacionamentos Complexos**: One-to-Many (Artista → Álbum) e Many-to-Many (Álbum ↔ Gênero) com integridade referencial via `ForeignKey`  
-✅ **Documentação Automática**: Swagger UI gerada automaticamente  
-✅ **Dependency Injection**: Uso de `Depends` do FastAPI para gerenciar sessões  
-✅ **Validação de Ambiente**: Verificação de `DATABASE_URL` com tratamento de erros  
-✅ **Docstrings**: Documentação de classes e relacionamentos nos models  
-✅ **TYPE_CHECKING**: Uso de imports condicionais para evitar circular imports  
+✅ Clean code and clear structure
+✅ Advanced type hints with SQLAlchemy 2.0
+✅ Request validation using Pydantic 2.x
+✅ Proper HTTP error handling
+✅ Separate models, schemas, and routes
+✅ Complex relationship support with referential integrity
+✅ Automatic Swagger documentation
+✅ Dependency injection via FastAPI `Depends`
+✅ Environment validation for `DATABASE_URL`
+✅ Class docstrings for model documentation
+✅ `TYPE_CHECKING` imports to avoid circular references
 
-## 🧪 Testando a API
+## 🧪 Testing the API
 
-Use a Swagger UI integrada (`http://localhost:8000/docs`) para testar os endpoints interativamente, ou ferramentas como Postman / Insomnia / `curl`.
+Use Swagger UI at `http://localhost:8000/docs` to test endpoints interactively, or use Postman/Insomnia/`curl`.
 
-Exemplo rápido (criar artista):
-```bash
-curl -X POST "http://localhost:8000/artistas/" \
-  -H "Content-Type: application/json" \
-  -d '{"nome":"The Beatles","pais_origem":"Reino Unido","ano_formacao":1960}'
-```
+## 🩹 Troubleshooting
 
-## 🩹 Solução de Problemas
+### `permission denied for schema public` (PostgreSQL 15+)
 
-### `permissão negada para esquema public` (PostgreSQL 15+)
-
-A partir do PostgreSQL 15, usuários comuns deixaram de ter permissão automática para criar objetos no schema `public`. Se `Base.metadata.create_all(bind=engine)` falhar com esse erro, conecte-se ao banco com um usuário administrador (ex: `postgres`) e conceda a permissão ao usuário usado na `DATABASE_URL`:
+PostgreSQL 15+ no longer grants schema creation privileges automatically to regular users. If `Base.metadata.create_all(bind=engine)` fails with this error, connect with an admin user (for example `postgres`) and grant access:
 
 ```sql
-GRANT ALL ON SCHEMA public TO seu_usuario;
+GRANT ALL ON SCHEMA public TO your_user;
 ```
 
-## 📈 Possíveis Extensões
+## 📈 Possible Extensions
 
-- Adicionar autenticação e autorização (JWT)
-- Implementar paginação nos endpoints GET
-- Adicionar busca e filtros avançados
-- Criar testes unitários (pytest)
-- Implementar cache (Redis)
-- Adicionar logging estruturado
-- Implementar CI/CD (GitHub Actions)
+- Add authentication and authorization (JWT)
+- Implement pagination for GET endpoints
+- Add search and filter functionality
+- Write unit tests with pytest
+- Add caching with Redis
+- Implement structured logging
+- Add CI/CD with GitHub Actions
 
-## 📄 Licença
+## 📄 License
 
-Este projeto está sob a licença MIT.
+This project is licensed under the MIT License.
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
-Desenvolvido por Filipe Madeira como exemplo de API REST profissional com FastAPI e SQLAlchemy.
+Developed by Filipe Madeira as a professional FastAPI + SQLAlchemy REST API example.
 
 ---
 
-**⭐ Se este projeto foi útil, considere dar uma estrela!**
+**⭐ If you found this project useful, please give it a star!**

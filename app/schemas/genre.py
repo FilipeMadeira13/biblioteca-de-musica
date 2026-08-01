@@ -1,13 +1,13 @@
 from pydantic import BaseModel
 
 
-class GeneroResponse(BaseModel):
+class GenreResponse(BaseModel):
     id: int
-    nome: str
+    name: str
 
     class Config:
         from_attributes = True
 
 
-class GeneroCreate(BaseModel):
-    nome: str
+class GenreCreate(BaseModel):
+    name: str

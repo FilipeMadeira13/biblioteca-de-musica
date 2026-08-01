@@ -4,30 +4,29 @@ from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
-from app.models.album_genero import album_genero
+from app.models.album_genre import album_genre
 
 if TYPE_CHECKING:
-    from app.models.artista import Artista
-    from app.models.genero import Genero
+    from app.models.artist import Artist
+    from app.models.genre import Genre
 
 
 class Album(Base):
     """
-    Representa um álbum musical.
+    Represents a music album.
 
-    Relacionamentos:
-        artista: artista responsável pelo álbum (muitos-para-um).
-        generos: lista de gêneros associados a este álbum (muitos-para-muitos,
-        via tabela associativa 'album_genero').
+    Relationships:
+        artist: the album's artist (many-to-one).
+        genres: genres linked to the album (many-to-many via album_genre).
     """
 
-    __tablename__ = "albuns"
+    __tablename__ = "albums"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    titulo: Mapped[str] = mapped_column(String(100))
-    artista_id: Mapped[int] = mapped_column(Integer, ForeignKey("artistas.id"))
+    title: Mapped[str] = mapped_column(String(100))
+    artist_id: Mapped[int] = mapped_column(Integer, ForeignKey("artists.id"))
 
-    artista: Mapped["Artista"] = relationship("Artista", back_populates="albuns")
-    generos: Mapped[list["Genero"]] = relationship(
-        "Genero", secondary=album_genero, back_populates="albuns"
+    artist: Mapped["Artist"] = relationship("Artist", back_populates="albums")
+    genres: Mapped[list["Genre"]] = relationship(
+        "Genre", secondary=album_genre, back_populates="albums"
     )
