@@ -19,8 +19,8 @@ def create_genre(genre: GenreCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/genres/", response_model=List[GenreResponse])
-def list_genres(db: Session = Depends(get_db)):
-    genres = db.query(Genre).all()
+def list_genres(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
+    genres = db.query(Genre).offset(skip).limit(limit).all()
     return genres
 
 

@@ -19,8 +19,8 @@ def create_artist(artist: ArtistCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/artists/", response_model=List[ArtistResponse])
-def list_artists(db: Session = Depends(get_db)):
-    artists = db.query(Artist).all()
+def list_artists(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
+    artists = db.query(Artist).offset(skip).limit(limit).all()
     return artists
 
 

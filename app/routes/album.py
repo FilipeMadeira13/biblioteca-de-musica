@@ -32,10 +32,12 @@ def create_album(album: AlbumCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/albums/", response_model=List[AlbumResponse])
-def list_albums(db: Session = Depends(get_db)):
+def list_albums(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
     albums = (
         db.query(Album)
         .options(joinedload(Album.artist), joinedload(Album.genres))
+        .offset(skip)
+        .limit(limit)
         .all()
     )
     return albums

@@ -20,3 +20,9 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=409, detail="Username already exists")
     db.refresh(user_db)
     return user_db
+
+
+@app.get("/users/", response_model=list[UserResponse])
+def list_users(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
+    users = db.query(User).offset(skip).limit(limit).all()
+    return users
