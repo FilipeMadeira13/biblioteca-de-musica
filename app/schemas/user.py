@@ -11,4 +11,4 @@ class UserResponse(BaseModel):
 
 class UserCreate(BaseModel):
     name: str
-    password: str = Field(min_length=8)
+    password: str = Field(min_length=8, max_length=72)
