@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.dependencies import get_current_user
 from app.main import app
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
@@ -23,6 +24,16 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/users/", response_model=list[UserResponse])
-def list_users(db: Session = Depends(get_db), skip: int = 0, limit: int = 100):
+def list_users(
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 100,
+    current_user: User = Depends(get_current_user),
+):
     users = db.query(User).offset(skip).limit(limit).all()
     return users
+
+
+@app.get("/users/me", response_model=UserResponse)
+def read_current_user(current_user: User = Depends(get_current_user)):
+    return current_user
